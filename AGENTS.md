@@ -14,14 +14,14 @@ This file tracks progress across the phases listed in the compendio. References 
   - Nota: Login y logout básicos vinculando UsersService
 - [x] **Fase 6: Scaffold AuthService (FastAPI + JWT + Postgres/Alembic)** (l161)
   - Nota: Modelos y Alembic para blacklisted_tokens
-- [ ] **Fase 7: Scaffold UsersService (FastAPI + SQLAlchemy + MariaDB/Alembic)** (l162)
-  - Nota:
-- [ ] **Fase 8: Seeder de usuarios y publicación user.created** (l163)
-  - Nota:
-- [ ] **Fase 9: Playlists & Mocks B** (l164)
-  - Nota:
-- [ ] **Fase 10: Scaffold PlaylistService (FastAPI + Postgres)** (l165)
-  - Nota:
+  - [x] **Fase 7: Scaffold UsersService (FastAPI + SQLAlchemy + MariaDB/Alembic)** (l162)
+    - Nota: Added Alembic config and migrations
+  - [x] **Fase 8: Seeder de usuarios y publicación user.created** (l163)
+    - Nota: Seeder now publica eventos RabbitMQ
+  - [x] **Fase 9: Playlists & Mocks B** (l164)
+    - Nota: Incluidos mocks y servicio Playlist inicial
+  - [x] **Fase 10: Scaffold PlaylistService (FastAPI + Postgres)** (l165)
+    - Nota: Modelos y migraciones para playlists
 - [ ] **Fase 11: Integrar stub VideoService (FastAPI mock o gRPC stub)** (l166)
   - Nota:
 - [ ] **Fase 12: EmailService** (l167)

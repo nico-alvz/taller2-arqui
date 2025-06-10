@@ -41,6 +41,8 @@ services:
 
   playlist_service:
     build: ./playlist_service
+    environment:
+      - PLAYLIST_DB_URL=${PLAYLIST_DB_URL}
     depends_on:
       postgres:
         condition: service_healthy

@@ -20,7 +20,8 @@ docker compose up --build
 Services expose `/healthz` endpoints for checks.
 
 ## Seeding example users
-Run the users service seeder to populate the database with fake data:
+Run the users service seeder to populate the database with fake data. If `AMQP_URL`
+is set it will publish `user.created` events to RabbitMQ:
 ```bash
 cd users_service
 python seeder.py
@@ -32,6 +33,22 @@ Alembic is configured for AuthService. To create the tokens table locally:
 
 ```bash
 cd auth_service
+alembic upgrade head
+```
+
+## Running UsersService migrations
+To initialize the users table locally:
+
+```bash
+cd users_service
+alembic upgrade head
+```
+
+## Running PlaylistService migrations
+Initialize the playlist tables locally:
+
+```bash
+cd playlist_service
 alembic upgrade head
 ```
 
