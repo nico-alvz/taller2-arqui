@@ -5,5 +5,4 @@ alembic
 pymysql
 pytest
 httpx
-Faker
-passlib[bcrypt]
+
