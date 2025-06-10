@@ -50,6 +50,27 @@ alembic upgrade head
 To initialize the users table locally:
 
 ```bash
+
+## Architecture and Deployment
+The workshop requires a microservices architecture. Each service runs in its own
+container with a dedicated database and they communicate asynchronously through
+RabbitMQ. The API Gateway exposes HTTP endpoints and forwards requests to the
+internal services. All components are orchestrated locally with `docker-compose`
+in this repository. In production they could be deployed to a container
+platform using the same images.
+
+## Postman Collections
+Sample collections for the user flows are provided in the `postman/` directory.
+Import `flows.postman_collection.json` and the environment file into Postman to
+try the flows described in the workshop.
+
+## Questions from the reviewers
+- **¿Qué arquitectura se implementa?**
+  Una arquitectura de microservicios separada por dominios que se comunica via
+  RabbitMQ y es expuesta a través de una API Gateway.
+- **¿Cómo debería desplegarse?**
+  Puede ejecutarse localmente con Docker Compose o desplegarse en una plataforma
+  de contenedores manteniendo un contenedor por servicio.
 cd users_service
 alembic upgrade head
 ```
