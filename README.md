@@ -17,3 +17,12 @@ Databases (Postgres and MariaDB) and RabbitMQ are included in `docker-compose.ym
 docker compose up --build
 ```
 Services expose `/healthz` endpoints for checks.
+
+## Seeding example users
+Run the users service seeder to populate the database with fake data:
+```bash
+cd users_service
+python seeder.py
+```
+An example output is provided in `sample_seed_output.json`.
+
