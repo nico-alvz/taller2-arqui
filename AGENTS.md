@@ -9,22 +9,22 @@ This file tracks progress across the phases listed in the compendio. References 
 - [x] **Fase 3: Definir protos gRPC y exchanges RabbitMQ** (l158)
   - Nota: Added `contracts/` folder with proto files and exchanges summary
 - [x] **Fase 4: Configurar docker-compose.yml** (l159)
+  - Nota: Compose con variables de entorno y healthchecks
+- [ ] **Fase 5: Auth & Users** (l160)
   - Nota:
-- [x] **Fase 5: Auth & Users** (l160)
+- [ ] **Fase 6: Scaffold AuthService (FastAPI + JWT + Postgres/Alembic)** (l161)
   - Nota:
-- [x] **Fase 6: Scaffold AuthService (FastAPI + JWT + Postgres/Alembic)** (l161)
+- [ ] **Fase 7: Scaffold UsersService (FastAPI + SQLAlchemy + MariaDB/Alembic)** (l162)
   - Nota:
-- [x] **Fase 7: Scaffold UsersService (FastAPI + SQLAlchemy + MariaDB/Alembic)** (l162)
+- [ ] **Fase 8: Seeder de usuarios y publicación user.created** (l163)
   - Nota:
-- [x] **Fase 8: Seeder de usuarios y publicación user.created** (l163)
+- [ ] **Fase 9: Playlists & Mocks B** (l164)
   - Nota:
-- [x] **Fase 9: Playlists & Mocks B** (l164)
+- [ ] **Fase 10: Scaffold PlaylistService (FastAPI + Postgres)** (l165)
   - Nota:
-- [x] **Fase 10: Scaffold PlaylistService (FastAPI + Postgres)** (l165)
+- [ ] **Fase 11: Integrar stub VideoService (FastAPI mock o gRPC stub)** (l166)
   - Nota:
-- [x] **Fase 11: Integrar stub VideoService (FastAPI mock o gRPC stub)** (l166)
-  - Nota:
-- [x] **Fase 12: EmailService** (l167)
+- [ ] **Fase 12: EmailService** (l167)
   - Nota:
 - [ ] **Fase 13: Scaffold FastAPI consumer RabbitMQ + envío SMTP** (l168)
   - Nota:
