@@ -7,6 +7,7 @@ This repository contains a minimal scaffold for the services described in the wo
 - **UsersService**: FastAPI CRUD for users on port 8001.
 - **PlaylistService**: FastAPI service for playlists on port 8002.
 - **EmailService**: Node.js service using Express and nodemailer on port 8003.
+- **Contracts**: gRPC proto definitions and RabbitMQ exchanges in `contracts/`.
 - **APIGateway**: FastAPI proxy routing requests to services on port 8004.
 - **Mocks**: Video and Billing services with dummy endpoints.
 

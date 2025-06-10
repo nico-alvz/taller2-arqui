@@ -1,0 +1,32 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+
+package streamflow.users;
+
+message User {
+  string id = 1;
+  string email = 2;
+  string full_name = 3;
+  string role = 4;
+}
+
+message CreateUserRequest {
+  string email = 1;
+  string password = 2;
+  string full_name = 3;
+  string role = 4;
+}
+
+message UserId {
+  string id = 1;
+}
+
+message UserList {
+  repeated User users = 1;
+}
+
+service Users {
+  rpc CreateUser(CreateUserRequest) returns (User);
+  rpc GetUser(UserId) returns (User);
+  rpc ListUsers(google.protobuf.Empty) returns (UserList);
+}

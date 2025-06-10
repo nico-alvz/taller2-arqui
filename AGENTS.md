@@ -6,8 +6,8 @@ This file tracks progress across the phases listed in the compendio. References 
   - Nota:
 - [x] **Fase 2: Crear estructura de carpetas y repos** (l157)
   - Nota:
-- [ ] **Fase 3: Definir protos gRPC y exchanges RabbitMQ** (l158)
-  - Nota:
+- [x] **Fase 3: Definir protos gRPC y exchanges RabbitMQ** (l158)
+  - Nota: Added `contracts/` folder with proto files and exchanges summary
 - [x] **Fase 4: Configurar docker-compose.yml** (l159)
   - Nota:
 - [x] **Fase 5: Auth & Users** (l160)

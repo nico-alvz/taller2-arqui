@@ -1,0 +1,24 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+
+package streamflow.playlists;
+
+message Playlist {
+  int32 id = 1;
+  string user_id = 2;
+  string name = 3;
+}
+
+message PlaylistId {
+  int32 id = 1;
+}
+
+message PlaylistList {
+  repeated Playlist playlists = 1;
+}
+
+service Playlists {
+  rpc CreatePlaylist(Playlist) returns (Playlist);
+  rpc GetPlaylist(PlaylistId) returns (Playlist);
+  rpc ListPlaylists(google.protobuf.Empty) returns (PlaylistList);
+}
