@@ -1,0 +1,50 @@
+version: '3.9'
+services:
+  auth_service:
+    build: ./auth_service
+    ports:
+      - "8000:8000"
+  users_service:
+    build: ./users_service
+    ports:
+      - "8001:8001"
+  playlist_service:
+    build: ./playlist_service
+    ports:
+      - "8002:8002"
+  email_service:
+    build: ./email_service
+    ports:
+      - "8003:8003"
+  gateway:
+    build: ./gateway
+    ports:
+      - "8004:8004"
+  video_mock:
+    build: ./mocks/video_service
+    ports:
+      - "8010:8010"
+  billing_mock:
+    build: ./mocks/billing_service
+    ports:
+      - "8011:8011"
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  mariadb:
+    image: mariadb:11
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+    ports:
+      - "3306:3306"
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: example
+    ports:
+      - "5432:5432"
+networks:
+  default:
+    name: streamflow_net
