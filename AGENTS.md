@@ -50,3 +50,31 @@ This file tracks progress across the phases listed in the compendio. References 
   - Nota: ~~Requiere Dev B, pendiente~~
 - [x] **Fase 24: Publicar y etiquetar release** (l182)
   - Nota: README documenta crear tag
+- [ ] **Fase 11: Integrar stub VideoService (FastAPI mock o gRPC stub)** (l166)
+  - Nota:
+- [ ] **Fase 12: EmailService** (l167)
+  - Nota:
+- [ ] **Fase 13: Scaffold FastAPI consumer RabbitMQ + envío SMTP** (l168)
+  - Nota:
+- [ ] **Fase 14: Probar flujo con mock de invoice.paid** (l169)
+  - Nota:
+- [ ] **Fase 15: Gateway & Postman** (l170)
+  - Nota:
+- [ ] **Fase 16: Implementar proxy y middleware JWT** (l171)
+  - Nota:
+- [ ] **Fase 17: Generar colección Postman desde OpenAPI** (l172)
+  - Nota:
+- [ ] **Fase 18: Diagramas y CI** (l173)
+  - Nota:
+- [ ] **Fase 19: Añadir PlantUML y diagrama de secuencia** (l174)
+  - Nota:
+- [ ] **Fase 20: Ajustar CI: build, tests, compose up healthchecks** (l175)
+  - Nota:
+- [ ] **Fase 21: Revisión y Merge** (l176)
+  - Nota:
+- [ ] **Fase 22: Verificar checklist de riesgos** (l180)
+  - Nota:
+- [ ] **Fase 23: Hacer merge de repos o mono-repo** (l181)
+  - Nota:
+- [ ] **Fase 24: Publicar y etiquetar release** (l182)
+  - Nota:

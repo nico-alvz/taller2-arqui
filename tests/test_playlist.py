@@ -32,3 +32,4 @@ def test_add_video(monkeypatch):
     assert res.status_code == 200
     out = client.get('/playlists/1/videos')
     assert out.json() == ['v1']
+
