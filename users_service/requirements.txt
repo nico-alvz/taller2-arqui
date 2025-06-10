@@ -3,5 +3,7 @@ uvicorn[standard]
 SQLAlchemy
 alembic
 pymysql
+pika
 pytest
-httpx
+httpx==0.24.1
+
