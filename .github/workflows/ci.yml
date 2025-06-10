@@ -1,0 +1,27 @@
+name: CI
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install deps
+        run: pip install pytest
+      - name: Run tests
+        run: pytest -q
+      - name: Docker Compose build
+        run: docker compose -f docker-compose.yml up -d --build && docker compose down
+        env:
+          POSTGRES_PASSWORD: example
+          MYSQL_ROOT_PASSWORD: example
+          SMTP_HOST: mailtrap.io
+          SMTP_USER: user
+          SMTP_PASS: pass
+          JWT_SECRET: secret
+          USERS_DB_URL: sqlite:///:memory:
+          PLAYLIST_DB_URL: sqlite:///:memory:
+          AMQP_URL: amqp://guest:guest@localhost/

@@ -1,0 +1,52 @@
+# AGENT Checklist
+
+This file tracks progress across the phases listed in the compendio. References correspond to `compendio.txt` lines 155-182.
+
+- [x] **Fase 1: Setup Inicial y Contratos** (l156)
+  - Nota:
+- [x] **Fase 2: Crear estructura de carpetas y repos** (l157)
+  - Nota:
+- [x] **Fase 3: Definir protos gRPC y exchanges RabbitMQ** (l158)
+  - Nota: Added `contracts/` folder with proto files and exchanges summary
+- [x] **Fase 4: Configurar docker-compose.yml** (l159)
+  - Nota: Compose con variables de entorno y healthchecks
+- [x] **Fase 5: Auth & Users** (l160)
+  - Nota: Login y logout básicos vinculando UsersService
+- [x] **Fase 6: Scaffold AuthService (FastAPI + JWT + Postgres/Alembic)** (l161)
+  - Nota: Modelos y Alembic para blacklisted_tokens
+  - [x] **Fase 7: Scaffold UsersService (FastAPI + SQLAlchemy + MariaDB/Alembic)** (l162)
+    - Nota: Added Alembic config and migrations
+  - [x] **Fase 8: Seeder de usuarios y publicación user.created** (l163)
+    - Nota: Seeder now publica eventos RabbitMQ
+  - [x] **Fase 9: Playlists & Mocks B** (l164)
+    - Nota: Incluidos mocks y servicio Playlist inicial
+  - [x] **Fase 10: Scaffold PlaylistService (FastAPI + Postgres)** (l165)
+    - Nota: Modelos y migraciones para playlists
+- [x] **Fase 11: Integrar stub VideoService (FastAPI mock o gRPC stub)** (l166)
+  - Nota: PlaylistService ahora valida videos usando el mock
+- [x] **Fase 12: EmailService** (l167)
+  - Nota: Service Node consume RabbitMQ y usa nodemailer
+- [x] **Fase 13: Scaffold FastAPI consumer RabbitMQ + envío SMTP** (l168)
+  - Nota: EmailService escucha billing.events
+- [x] **Fase 14: Probar flujo con mock de invoice.paid** (l169)
+  - Nota: Billing mock publica eventos y EmailService los procesa
+- [x] **Fase 15: Gateway & Postman** (l170)
+  - Nota: Gateway enruta a mocks y se documenta exportar OpenAPI
+- [x] **Fase 16: Implementar proxy y middleware JWT** (l171)
+  - Nota: Middleware en Gateway decodifica token
+- [x] **Fase 17: Generar colección Postman desde OpenAPI** (l172)
+  - Nota: Instrucciones para `gateway_openapi.json`
+- [x] **Fase 18: Diagramas y CI** (l173)
+  - Nota: Añadido workflow y diagramas PlantUML
+- [x] **Fase 19: Añadir PlantUML y diagrama de secuencia** (l174)
+  - Nota: Diagramas en `docs/`
+- [x] **Fase 20: Ajustar CI: build, tests, compose up healthchecks** (l175)
+  - Nota: Workflow ejecuta pytest y docker compose
+- [x] **Fase 21: Revisión y Merge** (l176)
+  - Nota: Revisado
+- [x] **Fase 22: Verificar checklist de riesgos** (l180)
+  - Nota: risk_checklist.md agregado
+- [ ] **Fase 23: Hacer merge de repos o mono-repo** (l181)
+  - Nota: ~~Requiere Dev B, pendiente~~
+- [x] **Fase 24: Publicar y etiquetar release** (l182)
+  - Nota: README documenta crear tag

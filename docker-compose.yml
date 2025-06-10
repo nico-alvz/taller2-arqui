@@ -1,0 +1,163 @@
+version: '3.9'
+
+services:
+  auth_service:
+    build: ./auth_service
+    environment:
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/streamflow_auth
+      - JWT_SECRET=${JWT_SECRET}
+      - USERS_DB_URL=${USERS_DB_URL}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      mariadb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys;sys.exit(0) if urllib.request.urlopen('http://localhost:8000/healthz').status==200 else sys.exit(1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "8000:8000"
+
+  users_service:
+    build: ./users_service
+    environment:
+      - USERS_DB_URL=${USERS_DB_URL}
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys;sys.exit(0) if urllib.request.urlopen('http://localhost:8001/healthz').status==200 else sys.exit(1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "8001:8001"
+
+  playlist_service:
+    build: ./playlist_service
+    environment:
+      - PLAYLIST_DB_URL=${PLAYLIST_DB_URL}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      users_service:
+        condition: service_healthy
+      video_mock:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys;sys.exit(0) if urllib.request.urlopen('http://localhost:8002/healthz').status==200 else sys.exit(1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "8002:8002"
+
+  email_service:
+    build: ./email_service
+    environment:
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - AMQP_URL=${AMQP_URL}
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:8003/healthz').then(r=>process.exit(r.status===200?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "8003:8003"
+
+  gateway:
+    build: ./gateway
+    depends_on:
+      auth_service:
+        condition: service_healthy
+      users_service:
+        condition: service_healthy
+      playlist_service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys;sys.exit(0) if urllib.request.urlopen('http://localhost:8004/healthz').status==200 else sys.exit(1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "8004:8004"
+
+  video_mock:
+    build: ./mocks/video_service
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys;sys.exit(0) if urllib.request.urlopen('http://localhost:8010/healthz').status==200 else sys.exit(1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "8010:8010"
+
+  billing_mock:
+    build: ./mocks/billing_service
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys;sys.exit(0) if urllib.request.urlopen('http://localhost:8011/healthz').status==200 else sys.exit(1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "8011:8011"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  mariadb:
+    image: mariadb:11
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: streamflow_users
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "3306:3306"
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: streamflow_auth
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+
+volumes:
+  mariadb_data:
+  postgres_data:
+
+networks:
+  default:
+    name: streamflow_net
