@@ -1,0 +1,52 @@
+# AGENT Checklist
+
+This file tracks progress across the phases listed in the compendio. References correspond to `compendio.txt` lines 155-182.
+
+- [x] **Fase 1: Setup Inicial y Contratos** (l156)
+  - Nota:
+- [x] **Fase 2: Crear estructura de carpetas y repos** (l157)
+  - Nota:
+- [ ] **Fase 3: Definir protos gRPC y exchanges RabbitMQ** (l158)
+  - Nota:
+- [x] **Fase 4: Configurar docker-compose.yml** (l159)
+  - Nota:
+- [x] **Fase 5: Auth & Users** (l160)
+  - Nota:
+- [x] **Fase 6: Scaffold AuthService (FastAPI + JWT + Postgres/Alembic)** (l161)
+  - Nota:
+- [x] **Fase 7: Scaffold UsersService (FastAPI + SQLAlchemy + MariaDB/Alembic)** (l162)
+  - Nota:
+- [x] **Fase 8: Seeder de usuarios y publicación user.created** (l163)
+  - Nota:
+- [x] **Fase 9: Playlists & Mocks B** (l164)
+  - Nota:
+- [x] **Fase 10: Scaffold PlaylistService (FastAPI + Postgres)** (l165)
+  - Nota:
+- [x] **Fase 11: Integrar stub VideoService (FastAPI mock o gRPC stub)** (l166)
+  - Nota:
+- [x] **Fase 12: EmailService** (l167)
+  - Nota:
+- [ ] **Fase 13: Scaffold FastAPI consumer RabbitMQ + envío SMTP** (l168)
+  - Nota:
+- [ ] **Fase 14: Probar flujo con mock de invoice.paid** (l169)
+  - Nota:
+- [ ] **Fase 15: Gateway & Postman** (l170)
+  - Nota:
+- [ ] **Fase 16: Implementar proxy y middleware JWT** (l171)
+  - Nota:
+- [ ] **Fase 17: Generar colección Postman desde OpenAPI** (l172)
+  - Nota:
+- [ ] **Fase 18: Diagramas y CI** (l173)
+  - Nota:
+- [ ] **Fase 19: Añadir PlantUML y diagrama de secuencia** (l174)
+  - Nota:
+- [ ] **Fase 20: Ajustar CI: build, tests, compose up healthchecks** (l175)
+  - Nota:
+- [ ] **Fase 21: Revisión y Merge** (l176)
+  - Nota:
+- [ ] **Fase 22: Verificar checklist de riesgos** (l180)
+  - Nota:
+- [ ] **Fase 23: Hacer merge de repos o mono-repo** (l181)
+  - Nota:
+- [ ] **Fase 24: Publicar y etiquetar release** (l182)
+  - Nota:

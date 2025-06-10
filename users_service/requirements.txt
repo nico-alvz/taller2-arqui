@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+SQLAlchemy
+alembic
+pymysql
+pytest
+httpx
+Faker
+passlib[bcrypt]
