@@ -10,10 +10,10 @@ This file tracks progress across the phases listed in the compendio. References 
   - Nota: Added `contracts/` folder with proto files and exchanges summary
 - [x] **Fase 4: Configurar docker-compose.yml** (l159)
   - Nota: Compose con variables de entorno y healthchecks
-- [ ] **Fase 5: Auth & Users** (l160)
-  - Nota:
-- [ ] **Fase 6: Scaffold AuthService (FastAPI + JWT + Postgres/Alembic)** (l161)
-  - Nota:
+- [x] **Fase 5: Auth & Users** (l160)
+  - Nota: Login y logout básicos vinculando UsersService
+- [x] **Fase 6: Scaffold AuthService (FastAPI + JWT + Postgres/Alembic)** (l161)
+  - Nota: Modelos y Alembic para blacklisted_tokens
 - [ ] **Fase 7: Scaffold UsersService (FastAPI + SQLAlchemy + MariaDB/Alembic)** (l162)
   - Nota:
 - [ ] **Fase 8: Seeder de usuarios y publicación user.created** (l163)

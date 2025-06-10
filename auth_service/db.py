@@ -1,8 +1,8 @@
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
-import os
 
-DATABASE_URL = os.getenv('USERS_DB_URL', 'mysql+pymysql://root:example@mariadb:3306/streamflow_users')
+DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://postgres:example@localhost/streamflow_auth')
 
 connect_args = {}
 pool_args = {}

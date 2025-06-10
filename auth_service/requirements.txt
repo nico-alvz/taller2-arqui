@@ -6,4 +6,4 @@ SQLAlchemy
 psycopg2-binary
 alembic
 pytest
-httpx
+httpx==0.24.1

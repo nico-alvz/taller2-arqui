@@ -27,3 +27,11 @@ python seeder.py
 ```
 An example output is provided in `sample_seed_output.json`.
 
+## Running AuthService migrations
+Alembic is configured for AuthService. To create the tokens table locally:
+
+```bash
+cd auth_service
+alembic upgrade head
+```
+
