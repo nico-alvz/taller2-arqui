@@ -76,6 +76,7 @@ services:
     ports:
       - "8003:8003"
 
+  gateway1:
   gateway:
     build: ./gateway
     depends_on:
@@ -92,6 +93,40 @@ services:
       retries: 5
     ports:
       - "8004:8004"
+
+  gateway2:
+    build: ./gateway
+    depends_on:
+      auth_service:
+        condition: service_healthy
+      users_service:
+        condition: service_healthy
+      playlist_service:
+        condition: service_healthy
+    ports:
+      - "8005:8004"
+
+  gateway3:
+    build: ./gateway
+    depends_on:
+      auth_service:
+        condition: service_healthy
+      users_service:
+        condition: service_healthy
+      playlist_service:
+        condition: service_healthy
+    ports:
+      - "8006:8004"
+
+  nginx:
+    build: ./nginx
+    depends_on:
+      - gateway1
+      - gateway2
+      - gateway3
+    ports:
+      - "8080:80"
+      - "8443:443"
 
   video_mock:
     build: ./mocks/video_service

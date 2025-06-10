@@ -53,6 +53,5 @@ if __name__ == "__main__":
     import sys
     n = int(sys.argv[1]) if len(sys.argv) > 1 else 150
     created = seed(n)
-    created = seed()
     for u in created:
         print({"id": u.id, "email": u.email, "full_name": u.full_name})

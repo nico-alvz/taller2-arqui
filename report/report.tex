@@ -1,0 +1,28 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\title{Informe Taller 2}
+\author{Equipo StreamFlow}
+\date{\today}
+\begin{document}
+\maketitle
+\tableofcontents
+\section{Modelos ER}
+Adjuntar diagramas exportados de DBDiagram.
+\section{Diagrama C4}
+Se incluye un diagrama de contenedores en la carpeta docs.
+\section{Elección de arquitectura}
+La arquitectura de microservicios facilita escalar componentes y aislar fallos.\newline
+Otras opciones como monolito modular o SOA fueron consideradas pero la separación estricta de bases de datos y eventos justifica microservicios.
+\section{Beneficios}
+Cada servicio puede desplegarse de forma independiente y se comunica por RabbitMQ.
+\section{Migración}
+Siguiendo Strangler Fig se migraría primero Autenticación y Usuarios para reducir riesgo.\newline
+Se recomienda el patrón Database per service para independencia.
+\section{API Gateway}
+Centraliza la autenticación y simplifica el consumo externo.
+\section{Uso de gRPC}
+Permite comunicación eficiente entre servicios con contratos claros.
+\section{Mejoras}
+Se podría añadir autoscaling y monitoreo más robusto.
+\end{document}

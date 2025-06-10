@@ -1,0 +1,22 @@
+{
+  "info": {
+    "name": "StreamFlow Endpoints DevA",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {"name": "Login", "request": {"method": "POST", "url": "{{base}}/auth/login", "body": {"mode": "raw", "raw": "{\"email\":\"user@example.com\",\"password\":\"pass\"}"}}},
+    {"name": "Change password", "request": {"method": "PATCH", "url": "{{base}}/auth/usuarios/1", "body": {"mode": "raw", "raw": "{\"old\":\"old\",\"new\":\"new\",\"confirm\":\"new\"}"}}},
+    {"name": "Logout", "request": {"method": "POST", "url": "{{base}}/auth/logout"}},
+    {"name": "Create user", "request": {"method": "POST", "url": "{{base}}/usuarios", "body": {"mode": "raw", "raw": "{\"email\":\"a@b.com\",\"password\":\"x\",\"confirm\":\"x\",\"role\":\"Cliente\"}"}}},
+    {"name": "Get user", "request": {"method": "GET", "url": "{{base}}/usuarios/1"}},
+    {"name": "Update user", "request": {"method": "PATCH", "url": "{{base}}/usuarios/1", "body": {"mode": "raw", "raw": "{\"full_name\":\"New\"}"}}},
+    {"name": "Delete user", "request": {"method": "DELETE", "url": "{{base}}/usuarios/1"}},
+    {"name": "List users", "request": {"method": "GET", "url": "{{base}}/usuarios"}},
+    {"name": "Create playlist", "request": {"method": "POST", "url": "{{base}}/listas-reproduccion", "body": {"mode": "raw", "raw": "{\"user_id\":\"1\",\"name\":\"Favorites\"}"}}},
+    {"name": "Add video", "request": {"method": "POST", "url": "{{base}}/listas-reproduccion/1/videos", "body": {"mode": "raw", "raw": "{\"video_id\":\"v1\"}"}}},
+    {"name": "Delete video", "request": {"method": "DELETE", "url": "{{base}}/listas-reproduccion/1/videos", "body": {"mode": "raw", "raw": "{\"video_id\":\"v1\"}"}}},
+    {"name": "List playlists", "request": {"method": "GET", "url": "{{base}}/listas-reproduccion"}},
+    {"name": "List playlist videos", "request": {"method": "GET", "url": "{{base}}/listas-reproduccion/1/videos"}},
+    {"name": "Delete playlist", "request": {"method": "DELETE", "url": "{{base}}/listas-reproduccion/1"}}
+  ]
+}

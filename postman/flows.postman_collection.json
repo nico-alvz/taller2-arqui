@@ -1,0 +1,141 @@
+{
+  "info": {
+    "name": "StreamFlow Flows",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Flow 1 - register client and like video",
+      "item": [
+        {
+          "name": "List videos",
+          "request": {
+            "method": "GET",
+            "url": "{{base}}/videos"
+          }
+        },
+        {
+          "name": "Register user",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "url": "{{base}}/usuarios",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"{{email}}\", \"password\": \"pass\"}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "url": "{{base}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"{{email}}\", \"password\": \"pass\"}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var data = pm.response.json();",
+                  "pm.environment.set('token', data.access_token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get video",
+          "request": {
+            "method": "GET",
+            "url": "{{base}}/videos/1"
+          }
+        },
+        {
+          "name": "Like video",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": "{{base}}/interacciones/1/likes"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flow 2 - admin pays invoice",
+      "item": [
+        {
+          "name": "Admin login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "url": "{{base}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"admin@example.com\", \"password\": \"adminpass\"}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var data = pm.response.json();",
+                  "pm.environment.set('admintoken', data.access_token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "List invoices",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admintoken}}"}
+            ],
+            "url": "{{base}}/facturas"
+          }
+        },
+        {
+          "name": "Mark invoice paid",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admintoken}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "url": "{{base}}/facturas/1",
+            "body": {
+              "mode": "raw",
+              "raw": "{\"estado\": \"Pagado\"}"
+            }
+          }
+        },
+        {
+          "name": "List actions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{admintoken}}"}
+            ],
+            "url": "{{base}}/monitoreo/acciones"
+          }
+        }
+      ]
+    }
+  ]
+}
