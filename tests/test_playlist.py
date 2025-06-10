@@ -19,3 +19,17 @@ def test_create_playlist():
     out = client.get(f'/playlists/{pid}')
     assert out.status_code == 200
     assert out.json()['name'] == 'My list'
+
+
+def test_add_video(monkeypatch):
+    client.post('/playlists', json={'user_id': 'u2', 'name': 'Videos'})
+    # mock video service call
+    def mock_get(url):
+        class R: status_code = 200
+        return R()
+    monkeypatch.setattr('httpx.get', mock_get)
+    res = client.post('/playlists/1/videos', json={'video_id': 'v1'})
+    assert res.status_code == 200
+    out = client.get('/playlists/1/videos')
+    assert out.json() == ['v1']
+

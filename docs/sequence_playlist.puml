@@ -1,0 +1,12 @@
+@startuml
+actor User
+participant Gateway
+participant PlaylistService as PS
+participant VideoMock as VM
+User -> Gateway: POST /playlists/{id}/videos
+Gateway -> PS: add_video
+PS -> VM: GET /videos/{vid}
+VM --> PS: 200 OK
+PS --> Gateway: added
+Gateway --> User: 200 OK
+@enduml

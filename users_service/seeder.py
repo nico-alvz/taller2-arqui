@@ -29,7 +29,7 @@ def publish_created(user):
     conn.close()
 
 
-def seed(n: int = 5):
+def seed(n: int = 150):
     db: Session = SessionLocal()
     users = []
     try:
@@ -50,6 +50,9 @@ def seed(n: int = 5):
         db.close()
 
 if __name__ == "__main__":
+    import sys
+    n = int(sys.argv[1]) if len(sys.argv) > 1 else 150
+    created = seed(n)
     created = seed()
     for u in created:
         print({"id": u.id, "email": u.email, "full_name": u.full_name})

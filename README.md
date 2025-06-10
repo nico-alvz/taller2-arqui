@@ -20,11 +20,21 @@ docker compose up --build
 Services expose `/healthz` endpoints for checks.
 
 ## Seeding example users
+
+Run the users service seeder to populate the database with fake data. By default
+it creates 150 users. If `AMQP_URL` is set it will publish `user.created` events
+to RabbitMQ. You can optionally pass the desired amount as an argument:
+```bash
+cd users_service
+python seeder.py        # creates 150 users
+python seeder.py 200    # create 200 users instead
+=======
 Run the users service seeder to populate the database with fake data. If `AMQP_URL`
 is set it will publish `user.created` events to RabbitMQ:
 ```bash
 cd users_service
 python seeder.py
+
 ```
 An example output is provided in `sample_seed_output.json`.
 
@@ -51,4 +61,27 @@ Initialize the playlist tables locally:
 cd playlist_service
 alembic upgrade head
 ```
+
+
+## Generating Postman collection
+With the gateway running you can export its OpenAPI spec and import to Postman:
+
+```bash
+curl http://localhost:8004/openapi.json -o gateway_openapi.json
+```
+
+## Listening to invoice.paid events
+EmailService consumes `billing.events` from RabbitMQ. Ensure `AMQP_URL` is set
+in your environment (see `.env.example`) so that invoices published by the
+billing mock trigger emails.
+
+
+## Release
+Create a tag when all phases are complete:
+
+```bash
+git tag v1.0
+```
+
+Diagrams are available in the `docs/` folder as PlantUML files.
 

@@ -22,6 +22,34 @@ This file tracks progress across the phases listed in the compendio. References 
     - Nota: Incluidos mocks y servicio Playlist inicial
   - [x] **Fase 10: Scaffold PlaylistService (FastAPI + Postgres)** (l165)
     - Nota: Modelos y migraciones para playlists
+- [x] **Fase 11: Integrar stub VideoService (FastAPI mock o gRPC stub)** (l166)
+  - Nota: PlaylistService ahora valida videos usando el mock
+- [x] **Fase 12: EmailService** (l167)
+  - Nota: Service Node consume RabbitMQ y usa nodemailer
+- [x] **Fase 13: Scaffold FastAPI consumer RabbitMQ + envío SMTP** (l168)
+  - Nota: EmailService escucha billing.events
+- [x] **Fase 14: Probar flujo con mock de invoice.paid** (l169)
+  - Nota: Billing mock publica eventos y EmailService los procesa
+- [x] **Fase 15: Gateway & Postman** (l170)
+  - Nota: Gateway enruta a mocks y se documenta exportar OpenAPI
+- [x] **Fase 16: Implementar proxy y middleware JWT** (l171)
+  - Nota: Middleware en Gateway decodifica token
+- [x] **Fase 17: Generar colección Postman desde OpenAPI** (l172)
+  - Nota: Instrucciones para `gateway_openapi.json`
+- [x] **Fase 18: Diagramas y CI** (l173)
+  - Nota: Añadido workflow y diagramas PlantUML
+- [x] **Fase 19: Añadir PlantUML y diagrama de secuencia** (l174)
+  - Nota: Diagramas en `docs/`
+- [x] **Fase 20: Ajustar CI: build, tests, compose up healthchecks** (l175)
+  - Nota: Workflow ejecuta pytest y docker compose
+- [x] **Fase 21: Revisión y Merge** (l176)
+  - Nota: Revisado
+- [x] **Fase 22: Verificar checklist de riesgos** (l180)
+  - Nota: risk_checklist.md agregado
+- [ ] **Fase 23: Hacer merge de repos o mono-repo** (l181)
+  - Nota: ~~Requiere Dev B, pendiente~~
+- [x] **Fase 24: Publicar y etiquetar release** (l182)
+  - Nota: README documenta crear tag
 - [ ] **Fase 11: Integrar stub VideoService (FastAPI mock o gRPC stub)** (l166)
   - Nota:
 - [ ] **Fase 12: EmailService** (l167)

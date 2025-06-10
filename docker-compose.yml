@@ -64,6 +64,7 @@ services:
       - SMTP_HOST=${SMTP_HOST}
       - SMTP_USER=${SMTP_USER}
       - SMTP_PASS=${SMTP_PASS}
+      - AMQP_URL=${AMQP_URL}
     depends_on:
       rabbitmq:
         condition: service_healthy

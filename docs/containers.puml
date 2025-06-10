@@ -1,0 +1,15 @@
+@startuml
+!include <C4/C4_Container>
+LAYOUT_WITH_LEGEND()
+Person(user, "User")
+Container(auth, "AuthService", "FastAPI")
+Container(users, "UsersService", "FastAPI")
+Container(playlist, "PlaylistService", "FastAPI")
+Container(email, "EmailService", "Node.js")
+Container(gateway, "API Gateway", "FastAPI")
+Rel(user, gateway, "HTTP")
+Rel(gateway, auth, "HTTP")
+Rel(gateway, users, "HTTP")
+Rel(gateway, playlist, "HTTP")
+Rel(gateway, email, "HTTP")
+@enduml
