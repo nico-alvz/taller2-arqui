@@ -9,7 +9,9 @@ This repository contains a minimal scaffold for the services described in the wo
 - **EmailService**: Node.js service using Express and nodemailer on port 8003.
 - **Contracts**: gRPC proto definitions and RabbitMQ exchanges in `contracts/`.
 - **APIGateway**: FastAPI proxy routing requests to services on port 8004.
-- **Mocks**: Video and Billing services with dummy endpoints.
+- **VideosService**: mock of the video service on port 8010.
+- **BillingService**: mock of the billing service on port 8011.
+- **Interacciones** and **Monitoreo**: stubs from developer B placed in the repo.
 
 Databases (Postgres and MariaDB) and RabbitMQ are included in `docker-compose.yml`.
 

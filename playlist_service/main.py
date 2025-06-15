@@ -58,7 +58,7 @@ def add_video(pl_id: int, data: VideoIn, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="playlist not found")
     # verify video exists via stub
     try:
-        r = httpx.get(f"http://video_mock:8010/videos/{data.video_id}")
+        r = httpx.get(f"http://videos_service:8010/videos/{data.video_id}")
         if r.status_code != 200:
             raise Exception
     except Exception:

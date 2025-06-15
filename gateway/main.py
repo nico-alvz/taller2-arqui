@@ -24,8 +24,10 @@ SERVICES = {
     'users': 'http://users_service:8001',
     'playlists': 'http://playlist_service:8002',
     'email': 'http://email_service:8003',
-    'videos': 'http://video_mock:8010',
-    'facturas': 'http://billing_mock:8011'
+    'videos': 'http://videos_service:8010',
+    'facturas': 'http://billing_service:8011',
+    'interacciones': 'http://interacciones_service:8012',
+    'monitoreo': 'http://monitoreo_service:8013'
 }
 
 @app.api_route('/{service}/{path:path}', methods=['GET','POST','PUT','DELETE','PATCH'])
