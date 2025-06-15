@@ -19,11 +19,6 @@ async def jwt_middleware(request: Request, call_next):
             request.state.user_id = None
     return await call_next(request)
 
-from fastapi import FastAPI, Request
-import httpx
-
-app = FastAPI(title="APIGateway")
-
 SERVICES = {
     'auth': 'http://auth_service:8000',
     'users': 'http://users_service:8001',
@@ -31,7 +26,6 @@ SERVICES = {
     'email': 'http://email_service:8003',
     'videos': 'http://video_mock:8010',
     'facturas': 'http://billing_mock:8011'
-    'email': 'http://email_service:8003'
 }
 
 @app.api_route('/{service}/{path:path}', methods=['GET','POST','PUT','DELETE','PATCH'])
@@ -45,7 +39,6 @@ async def proxy(service: str, path: str, request: Request):
         if request.headers.get('Authorization'):
             headers['Authorization'] = request.headers['Authorization']
         resp = await client.request(request.method, url, json=data, headers=headers)
-        resp = await client.request(request.method, url, json=await request.json() if request.method != 'GET' else None)
         return resp.json()
 
 @app.get('/healthz')
