@@ -6,10 +6,10 @@ from jose import jwt
 from sqlalchemy.orm import Session
 from passlib.hash import bcrypt
 
-from .db import SessionLocal as TokenSession, Base as TokenBase, engine as token_engine
-from .models import BlacklistedToken
-from .users_db import SessionLocal as UsersSession, Base as UsersBase, engine as users_engine
-from .users_models import User
+from db import SessionLocal as TokenSession, Base as TokenBase, engine as token_engine
+from models import BlacklistedToken
+from users_db import SessionLocal as UsersSession, Base as UsersBase, engine as users_engine
+from users_models import User
 
 TokenBase.metadata.create_all(bind=token_engine)
 UsersBase.metadata.create_all(bind=users_engine)
