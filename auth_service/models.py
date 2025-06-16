@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.sql import func
 
-from .db import Base
+from auth_service.db import Base
 
 class BlacklistedToken(Base):
     __tablename__ = 'blacklisted_tokens'

@@ -3,8 +3,8 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 import httpx
 
-from .db import SessionLocal, engine, Base
-from . import models
+from playlist_service.db import SessionLocal, engine, Base
+from playlist_service import models
 
 Base.metadata.create_all(bind=engine)
 

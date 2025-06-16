@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.dialects.postgresql import CHAR
 from sqlalchemy.sql import func
-from .db import Base
+from playlist_service.db import Base
 
 class Playlist(Base):
     __tablename__ = 'playlists'

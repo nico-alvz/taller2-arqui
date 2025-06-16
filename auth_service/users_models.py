@@ -4,7 +4,7 @@ from sqlalchemy import Column, String, Enum, DateTime
 from sqlalchemy.dialects.mysql import CHAR
 from sqlalchemy.sql import func
 
-from .users_db import Base
+from auth_service.users_db import Base
 
 class RoleEnum(str, enum.Enum):
     free = 'free'

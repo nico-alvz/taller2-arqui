@@ -2,7 +2,7 @@ import os, sys
 from fastapi.testclient import TestClient
 
 os.environ['DATABASE_URL'] = 'sqlite:///:memory:'
-os.environ['USERS_DB_URL'] = 'sqlite:///:memory:'
+os.environ['AUTH_USERS_DB_URL'] = 'sqlite:///:memory:'
 os.environ['JWT_SECRET'] = 'secret'
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))

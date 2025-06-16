@@ -5,8 +5,8 @@ import os
 import json
 import pika
 
-from .db import SessionLocal, Base, engine
-from . import models
+from users_service.db import SessionLocal, Base, engine
+from users_service import models
 
 fake = Faker()
 
@@ -50,9 +50,10 @@ def seed(n: int = 150):
         db.close()
 
 if __name__ == "__main__":
-    import sys
+    import sys, pathlib
+    if __package__ is None:
+        sys.path.append(str(pathlib.Path(__file__).resolve().parent.parent))
     n = int(sys.argv[1]) if len(sys.argv) > 1 else 150
     created = seed(n)
-    created = seed()
     for u in created:
         print({"id": u.id, "email": u.email, "full_name": u.full_name})
