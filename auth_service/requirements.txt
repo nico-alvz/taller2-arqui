@@ -8,3 +8,4 @@ alembic
 pika
 pytest
 httpx==0.24.1
+email-validator
