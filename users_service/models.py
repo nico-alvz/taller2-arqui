@@ -4,7 +4,7 @@ from sqlalchemy.sql import func
 import enum
 import uuid
 
-from .db import Base
+from db import Base
 
 class RoleEnum(str, enum.Enum):
     free = 'free'
