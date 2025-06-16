@@ -3,8 +3,8 @@ from pydantic import BaseModel, EmailStr
 from sqlalchemy.orm import Session
 from passlib.hash import bcrypt
 
-from .db import SessionLocal, engine, Base
-from . import models
+from db import SessionLocal, engine, Base
+import models
 
 Base.metadata.create_all(bind=engine)
 
