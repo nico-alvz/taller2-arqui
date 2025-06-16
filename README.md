@@ -54,12 +54,16 @@ alembic upgrade head
 Initialize the playlist tables locally:
 
 ```bash
-cd playlist_service
-alembic upgrade head
-```
+- **AuthService** stores its own users table together with the token blacklist in
+  a single PostgreSQL database. At startup it consumes the `users` exchange from
+  RabbitMQ so that new users from **UsersService** are replicated locally.
 
-
-## Generating Postman collection
+token blacklist table. Using that token, a client may call
+`/auth/usuarios/{id}` to update the password, which modifies the same
+PostgreSQL database. Creating users with the seeder inserts rows in
+   replicated from RabbitMQ messages published by **UsersService**. Password
+   changes hit `/auth/usuarios/{id}` with a valid JWT and update the same
+   database.
 With the gateway running you can export its OpenAPI spec and import to Postman:
 
 ```bash

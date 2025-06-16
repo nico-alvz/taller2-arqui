@@ -1,12 +1,65 @@
 import os
 from datetime import datetime, timedelta
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, EmailStr
 from jose import jwt
 from sqlalchemy.orm import Session
 from passlib.hash import bcrypt
 
-from auth_service.db import SessionLocal as TokenSession, Base as TokenBase, engine as token_engine
+from auth_service.users_models import User, RoleEnum
+auth_scheme = HTTPBearer()
+
+class PasswordUpdate(BaseModel):
+    current_password: str
+    new_password: str
+    confirm_password: str
+
+
+def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(auth_scheme),
+    db: Session = Depends(get_user_db),
+):
+    token = credentials.credentials
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    except Exception:
+        raise HTTPException(status_code=401, detail="invalid token")
+    if db.query(BlacklistedToken).filter_by(token=token).first():
+        raise HTTPException(status_code=401, detail="invalid token")
+    user = db.get(User, payload["sub"])
+    if not user:
+        raise HTTPException(status_code=401, detail="user deleted")
+    return token, user
+
+
+@app.patch("/auth/usuarios/{user_id}")
+def update_password(
+    user_id: str,
+    data: PasswordUpdate,
+    auth: tuple = Depends(get_current_user),
+    db: Session = Depends(get_user_db),
+):
+    token, current_user = auth
+    target = db.get(User, user_id)
+    if not target:
+        raise HTTPException(status_code=404, detail="not found")
+    if current_user.id != user_id and current_user.role != RoleEnum.admin:
+        raise HTTPException(status_code=403, detail="forbidden")
+    if current_user.role != RoleEnum.admin:
+        if not bcrypt.verify(data.current_password, target.password_hash):
+            raise HTTPException(status_code=400, detail="invalid password")
+    if data.new_password != data.confirm_password:
+        raise HTTPException(status_code=400, detail="passwords do not match")
+    target.password_hash = bcrypt.hash(data.new_password)
+    db.commit()
+    return {
+        "id": target.id,
+        "email": target.email,
+        "full_name": target.full_name,
+        "role": target.role,
+    }
+
 from auth_service.models import BlacklistedToken
 from auth_service.users_db import SessionLocal as UsersSession, Base as UsersBase, engine as users_engine
 from auth_service.users_models import User
