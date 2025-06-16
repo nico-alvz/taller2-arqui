@@ -5,8 +5,6 @@ from pydantic import BaseModel, EmailStr
 from jose import jwt
 from sqlalchemy.orm import Session
 from passlib.hash import bcrypt
-
-from auth_service.db import SessionLocal as TokenSession, Base as TokenBase, engine as token_engine
 from auth_service.models import BlacklistedToken
 from auth_service.users_db import SessionLocal as UsersSession, Base as UsersBase, engine as users_engine
 from auth_service.users_models import User
