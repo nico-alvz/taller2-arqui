@@ -5,6 +5,7 @@ from auth_service.users_db import Base
 
 class BlacklistedToken(Base):
     __tablename__ = 'blacklisted_tokens'
+    __table_args__ = {'schema': 'public'}
 
     token = Column(String, primary_key=True)
     user_id = Column(String, nullable=False)
