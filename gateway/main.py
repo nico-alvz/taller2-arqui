@@ -54,11 +54,6 @@ async def create_user(request: Request):
     resp = stub.CreateUser(req)
     return resp.user
 
-@app.post("/auth/login")
-async def user_login(request: Request):
-    # duplicate? handled above
-    return await login(request)
-
 @app.get("/usuarios/{user_id}")
 async def get_user(user_id: str, token: str = Depends(get_token)):
     stub = get_user_stub()
