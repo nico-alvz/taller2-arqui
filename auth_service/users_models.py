@@ -1,8 +1,12 @@
+# users_models.py
+
 import enum
 import uuid
-from sqlalchemy import Column, String, Enum, DateTime
+from sqlalchemy import Column, String, DateTime
 from sqlalchemy.dialects.mysql import CHAR
 from sqlalchemy.sql import func
+# importamos el ENUM específico de PostgreSQL
+from sqlalchemy.dialects.postgresql import ENUM as PGEnum
 
 from auth_service.users_db import Base
 
@@ -24,10 +28,11 @@ class User(Base):
     full_name = Column(String(100))
 
     role = Column(
-        Enum(
+        PGEnum(
             RoleEnum,
-            name="roleenum",
-            schema="public"
+            name="roleenum",    
+            schema="public",    
+            create_type=False    
         ),
         nullable=False,
         default=RoleEnum.free
