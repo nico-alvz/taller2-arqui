@@ -3,7 +3,7 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config, pool
 from alembic import context
 
-from models import Base 
+from models import Base  # tu metadata
 
 def get_url():
     return os.getenv("USERS_DB_URL")

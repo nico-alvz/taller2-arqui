@@ -29,8 +29,9 @@ message UpdateUserRequest {
 }
 message DeleteUserRequest { string id = 1; }
 message ListUsersRequest {
-  string email = 1;
-  string name  = 2;
+  string email       = 1;  // Búsqueda parcial en email
+  string first_name  = 2;  // Búsqueda parcial en nombre
+  string last_name   = 3;  // Búsqueda parcial en apellido
 }
 
 message User {
