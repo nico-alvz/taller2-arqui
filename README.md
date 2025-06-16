@@ -17,24 +17,19 @@ Databases (Postgres and MariaDB) and RabbitMQ are included in `docker-compose.ym
 ```bash
 docker compose up --build
 ```
-Services expose `/healthz` endpoints for checks.
+Services expose `/healthz` endpoints for checks. Each service uses its own
+database connection and communicates with RabbitMQ using the `AMQP_URL`
+environment variable. AuthService reads users from its own database specified by
+`AUTH_USERS_DB_URL`.
 
 ## Seeding example users
 
-Run the users service seeder to populate the database with fake data. By default
-it creates 150 users. If `AMQP_URL` is set it will publish `user.created` events
-to RabbitMQ. You can optionally pass the desired amount as an argument:
+Run the users service seeder to populate the database with fake data. If
+`AMQP_URL` is set it will publish `user.created` events to RabbitMQ. Execute it
+from the repository root using the module syntax:
 ```bash
-cd users_service
-python seeder.py        # creates 150 users
-python seeder.py 200    # create 200 users instead
-=======
-Run the users service seeder to populate the database with fake data. If `AMQP_URL`
-is set it will publish `user.created` events to RabbitMQ:
-```bash
-cd users_service
-python seeder.py
-
+python -m users_service.seeder        # creates 150 users
+python -m users_service.seeder 200    # create 200 users instead
 ```
 An example output is provided in `sample_seed_output.json`.
 
