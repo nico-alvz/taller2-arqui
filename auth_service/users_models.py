@@ -5,7 +5,6 @@ import uuid
 from sqlalchemy import Column, String, DateTime
 from sqlalchemy.dialects.mysql import CHAR
 from sqlalchemy.sql import func
-# importamos el ENUM específico de PostgreSQL
 from sqlalchemy.dialects.postgresql import ENUM as PGEnum
 
 from auth_service.users_db import Base
@@ -17,6 +16,7 @@ class RoleEnum(str, enum.Enum):
 
 class User(Base):
     __tablename__ = 'users'
+    __table_args__ = {'schema': 'auth'}
 
     id = Column(
         CHAR(36),
@@ -30,9 +30,9 @@ class User(Base):
     role = Column(
         PGEnum(
             RoleEnum,
-            name="roleenum",    
-            schema="public",    
-            create_type=False    
+            name="roleenum",    # nombre del ENUM en la BD
+            schema="auth",      # esquema donde se crea el tipo
+            create_type=True    # SQLAlchemy genera CREATE TYPE
         ),
         nullable=False,
         default=RoleEnum.free
