@@ -1,0 +1,55 @@
+syntax = "proto3";
+package playlist;
+
+import "google/protobuf/timestamp.proto";
+
+service PlaylistService {
+  rpc CreatePlaylist(CreatePlaylistRequest) returns (PlaylistResponse);
+  rpc GetPlaylist(GetPlaylistRequest) returns (PlaylistResponse);
+  rpc UpdatePlaylist(UpdatePlaylistRequest) returns (PlaylistResponse);
+  rpc DeletePlaylist(DeletePlaylistRequest) returns (Empty);
+  rpc ListPlaylists(ListPlaylistsRequest) returns (ListPlaylistsResponse);
+  rpc AddVideo(AddVideoRequest) returns (PlaylistResponse);
+  rpc ListVideos(ListVideosRequest) returns (ListVideosResponse);
+}
+
+message CreatePlaylistRequest {
+  string name        = 1;
+  string description = 2;
+}
+
+message GetPlaylistRequest { string id = 1; }
+message UpdatePlaylistRequest {
+  string id          = 1;
+  string name        = 2;
+  string description = 3;
+}
+message DeletePlaylistRequest { string id = 1; }
+
+message ListPlaylistsRequest {
+  string owner_id = 1;
+}
+
+message AddVideoRequest {
+  string playlist_id = 1;
+  int32  video_id    = 2;
+}
+message ListVideosRequest { string playlist_id = 1; }
+
+message Playlist {
+  string id          = 1;
+  string name        = 2;
+  string description = 3;
+  string owner_id    = 4;
+  google.protobuf.Timestamp created_at = 5;
+}
+
+message VideoEntry {
+  int32 video_id     = 1;
+  google.protobuf.Timestamp added_at = 2;
+}
+
+message PlaylistResponse { Playlist playlist = 1; }
+message ListPlaylistsResponse { repeated Playlist playlists = 1; }
+message ListVideosResponse { repeated VideoEntry videos = 1; }
+message Empty {}

@@ -1,7 +1,16 @@
 FROM python:3.11-slim
 WORKDIR /app
+
+# Instalar dependencias
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-COPY . /app/users_service
-ENV PYTHONPATH=/app
-CMD ["uvicorn", "users_service.main:app", "--host", "0.0.0.0", "--port", "8001"]
+
+# Copiar código
+COPY . .
+
+# Generar stubs de gRPC
+RUN python -m grpc_tools.protoc -I./proto --python_out=./gen --grpc_python_out=./gen proto/users.proto
+
+EXPOSE 50051
+
+CMD ["python", "main.py"]

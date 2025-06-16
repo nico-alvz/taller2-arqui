@@ -1,12 +1,12 @@
 {
-  "name": "email_service",
+  "name": "email-service",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT",
   "dependencies": {
-    "express": "^4.18.2",
-    "nodemailer": "^6.9.10",
+    "@grpc/grpc-js": "^1.7.4",
+    "@grpc/proto-loader": "^0.7.7",
     "amqplib": "^0.10.3",
-    "nodemailer": "^6.9.10"
+    "dotenv": "^16.0.3",
+    "nodemailer": "^6.9.1"
   }
 }
