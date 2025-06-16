@@ -11,3 +11,4 @@ passlib[bcrypt]
 PyJWT
 psycopg2-binary
 faker
+httpx
