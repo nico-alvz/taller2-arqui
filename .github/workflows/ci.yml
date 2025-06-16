@@ -23,5 +23,6 @@ jobs:
           SMTP_PASS: pass
           JWT_SECRET: secret
           USERS_DB_URL: sqlite:///:memory:
+          AUTH_USERS_DB_URL: sqlite:///:memory:
           PLAYLIST_DB_URL: sqlite:///:memory:
           AMQP_URL: amqp://guest:guest@localhost/

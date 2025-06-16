@@ -22,6 +22,7 @@ database connection and communicates with RabbitMQ using the `AMQP_URL`
 environment variable. AuthService keeps a local copy of users in its database
 and stays in sync with UsersService through messages from RabbitMQ.
 
+
 ## Seeding example users
 
 Run the users service seeder to populate the database with fake data. If
