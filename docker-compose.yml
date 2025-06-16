@@ -6,6 +6,7 @@ services:
     environment:
       - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/streamflow_auth
       - JWT_SECRET=${JWT_SECRET}
+      - AMQP_URL=${AMQP_URL}
       - AUTH_USERS_DB_URL=${AUTH_USERS_DB_URL}
     depends_on:
       postgres:

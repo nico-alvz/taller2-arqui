@@ -7,16 +7,14 @@ os.environ['JWT_SECRET'] = 'secret'
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from auth_service.db import Base as TokenBase, engine as token_engine
-from auth_service.users_db import Base as UsersBase, engine as users_engine, SessionLocal as UsersSession
+from auth_service.users_db import Base, engine, SessionLocal
 from auth_service.users_models import User
 from passlib.hash import bcrypt
 from auth_service.main import app
 
-TokenBase.metadata.create_all(bind=token_engine)
-UsersBase.metadata.create_all(bind=users_engine)
+Base.metadata.create_all(bind=engine)
 
-session = UsersSession()
+session = SessionLocal()
 session.add(User(email='user@example.com', password_hash=bcrypt.hash('password')))
 session.commit()
 session.close()
