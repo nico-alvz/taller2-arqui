@@ -6,15 +6,52 @@ from jose import jwt
 from sqlalchemy.orm import Session
 from passlib.hash import bcrypt
 
-from db import SessionLocal as TokenSession, Base as TokenBase, engine as token_engine
-from models import BlacklistedToken
-from users_db import SessionLocal as UsersSession, Base as UsersBase, engine as users_engine
-from users_models import User
+from auth_service.users_db import SessionLocal, Base, engine
+from auth_service.models import BlacklistedToken
+from auth_service.users_models import User
+import pika
+import threading
+import json
 
-TokenBase.metadata.create_all(bind=token_engine)
-UsersBase.metadata.create_all(bind=users_engine)
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="AuthService")
+
+
+def _start_user_sync():
+    amqp_url = os.getenv("AMQP_URL")
+    if not amqp_url:
+        return
+
+    def consume():
+        try:
+            params = pika.URLParameters(amqp_url)
+            conn = pika.BlockingConnection(params)
+            ch = conn.channel()
+            ch.exchange_declare(exchange="users", exchange_type="fanout")
+            q = ch.queue_declare(queue="", exclusive=True)
+            ch.queue_bind(exchange="users", queue=q.method.queue)
+            for method, props, body in ch.consume(q.method.queue, inactivity_timeout=1):
+                if method is None:
+                    continue
+                data = json.loads(body)
+                db = SessionLocal()
+                user = db.get(User, data["id"])
+                if user:
+                    user.email = data["email"]
+                    user.full_name = data.get("full_name")
+                else:
+                    db.add(User(id=data["id"], email=data["email"], full_name=data.get("full_name"), password_hash=data.get("password_hash", "")))
+                db.commit()
+                db.close()
+                ch.basic_ack(method.delivery_tag)
+        except Exception as e:
+            print("user sync error", e)
+
+    threading.Thread(target=consume, daemon=True).start()
+
+
+_start_user_sync()
 
 SECRET_KEY = os.getenv("JWT_SECRET", "secret")
 ALGORITHM = "HS256"
@@ -29,14 +66,14 @@ class TokenRequest(BaseModel):
     token: str
 
 def get_user_db():
-    db = UsersSession()
+    db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
 
 def get_token_db():
-    db = TokenSession()
+    db = SessionLocal()
     try:
         yield db
     finally:

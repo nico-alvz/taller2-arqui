@@ -17,24 +17,19 @@ Databases (Postgres and MariaDB) and RabbitMQ are included in `docker-compose.ym
 ```bash
 docker compose up --build
 ```
-Services expose `/healthz` endpoints for checks.
+Services expose `/healthz` endpoints for checks. Each service uses its own
+database connection and communicates with RabbitMQ using the `AMQP_URL`
+environment variable. AuthService keeps a local copy of users in its database
+and stays in sync with UsersService through messages from RabbitMQ.
 
 ## Seeding example users
 
-Run the users service seeder to populate the database with fake data. By default
-it creates 150 users. If `AMQP_URL` is set it will publish `user.created` events
-to RabbitMQ. You can optionally pass the desired amount as an argument:
+Run the users service seeder to populate the database with fake data. If
+`AMQP_URL` is set it will publish `user.created` events to RabbitMQ. Execute it
+from the repository root using the module syntax:
 ```bash
-cd users_service
-python seeder.py        # creates 150 users
-python seeder.py 200    # create 200 users instead
-=======
-Run the users service seeder to populate the database with fake data. If `AMQP_URL`
-is set it will publish `user.created` events to RabbitMQ:
-```bash
-cd users_service
-python seeder.py
-
+python -m users_service.seeder        # creates 150 users
+python -m users_service.seeder 200    # create 200 users instead
 ```
 An example output is provided in `sample_seed_output.json`.
 
@@ -74,6 +69,44 @@ curl http://localhost:8004/openapi.json -o gateway_openapi.json
 EmailService consumes `billing.events` from RabbitMQ. Ensure `AMQP_URL` is set
 in your environment (see `.env.example`) so that invoices published by the
 billing mock trigger emails.
+
+## How services interact
+
+Every microservice has its own database and connects to the shared RabbitMQ
+instance using `AMQP_URL`.
+
+- **UsersService** stores the master users table and publishes `user.created`
+  events. Its MariaDB database is independent from the others.
+- **AuthService** keeps a replicated users table in PostgreSQL. At startup it
+  consumes the `users` exchange from RabbitMQ so new users are inserted locally.
+  Login requests validated here store blacklist tokens in the same database.
+- **PlaylistService** uses Postgres for playlists and calls the Video mock to
+  validate video IDs.
+- **EmailService** listens to `billing.events` and sends emails via SMTP.
+- **APIGateway** forwards HTTP requests to each service based on path.
+
+For example, a `/auth/login` request travels through the gateway to AuthService.
+The service checks the replicated user table, issues a JWT and records it in the
+token blacklist table. Creating users with the seeder inserts rows in
+UsersService's DB, publishes events through RabbitMQ and AuthService stores a
+copy. Invoice events published by the billing mock are consumed by EmailService
+to send notifications.
+
+### Request routing narrative
+
+1. Requests to `/auth/*` pass through the gateway to **AuthService**, which
+   validates credentials using its own PostgreSQL database. New users are
+   replicated from RabbitMQ messages published by **UsersService**.
+2. `/users/*` endpoints hit **UsersService** and modify its MariaDB tables.
+   Every creation publishes a `user.created` event so other services stay in
+   sync.
+3. `/playlists/*` routes go to **PlaylistService**, which stores playlists in
+   its Postgres database and verifies videos via the mock Video service.
+4. Invoices published by the Billing mock land in RabbitMQ. **EmailService**
+   consumes these events to send notifications.
+
+All microservices and the API Gateway run as separate containers and share the
+RabbitMQ instance defined in `docker-compose.yml`.
 
 
 ## Release
