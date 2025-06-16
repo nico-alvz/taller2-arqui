@@ -8,3 +8,4 @@ pytest
 httpx==0.24.1
 Faker
 passlib[bcrypt]
+email-validator
