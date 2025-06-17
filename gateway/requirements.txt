@@ -4,3 +4,4 @@ requests
 python-jose
 grpcio
 pydantic-settings
+aio
