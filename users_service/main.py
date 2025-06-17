@@ -128,12 +128,20 @@ class UserService(users_pb2_grpc.UserServiceServicer):
 # -----------------------------------------------------
 class HealthHandler(BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.path == '/healthz':
+        if self.path in ('/', '/healthz'):
             self.send_response(200)
             self.send_header('Content-Type', 'text/plain')
             self.end_headers()
-            # Texto específico para Render
             self.wfile.write(b'OK - Render health check')
+        else:
+            self.send_response(404)
+            self.end_headers()
+
+    def do_HEAD(self):
+        if self.path in ('/', '/healthz'):
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/plain')
+            self.end_headers()
         else:
             self.send_response(404)
             self.end_headers()
