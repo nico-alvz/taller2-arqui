@@ -1,25 +1,25 @@
-FROM python:3.11-slim
+# Usamos Python para el app y añadimos nginx para el health-proxy
+FROM python:3.10-slim
+
+# Instala nginx
+RUN apt-get update && apt-get install -y nginx && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
-# 1) Instalar dependencias
+# Instala dependencias Python
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 2) Copiar todo el código
+# Copia el código del servicio y la configuración de nginx
 COPY . .
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# 3) Generar stubs y parchear el import
-RUN mkdir -p gen \
-    && touch gen/__init__.py \
-    && python -m grpc_tools.protoc \
-         -I./proto \
-         --python_out=./gen \
-         --grpc_python_out=./gen \
-         proto/users.proto \
-    && sed -i \
-         's|^import users_pb2 as|from . import users_pb2 as|' \
-         gen/users_pb2_grpc.py
+# Exponemos el puerto público que Render checkea
+EXPOSE 50051
 
-# 4) Exponer puerto y arrancar
-EXPOSE 50051 50052
-CMD ["python", "main.py"]
+# Arranca el servidor gRPC en GRPC_PORT=50052 y nginx en foreground
+CMD sh -c "\
+    export GRPC_PORT=50052 && \
+    python main.py & \
+    nginx -g 'daemon off;'\
+"

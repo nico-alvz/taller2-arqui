@@ -1,12 +1,10 @@
+#!/usr/bin/env python3
 import os
 import json
 import uuid
 import logging
 from concurrent import futures
-from datetime import datetime
 from typing import Callable
-import threading
-from http.server import BaseHTTPRequestHandler, HTTPServer
 
 import pika
 import jwt
@@ -15,12 +13,12 @@ from sqlalchemy.orm import Session
 import grpc
 from grpc import ServicerContext, ServerInterceptor
 from google.protobuf.timestamp_pb2 import Timestamp
+from dotenv import load_dotenv
+from passlib.hash import bcrypt
 
 from db import SessionLocal, engine
 from models import Base, User, RoleEnum
 from gen import users_pb2, users_pb2_grpc
-from dotenv import load_dotenv
-from passlib.hash import bcrypt
 
 # -----------------------------------------------------
 # Logging configuration
@@ -37,23 +35,28 @@ logger = logging.getLogger("user_service")
 # -----------------------------------------------------
 load_dotenv(os.getenv("ENV_PATH", ".env"))
 
-# Database & RabbitMQ config
 USERS_DB_URL = os.getenv("USERS_DB_URL")
 if not USERS_DB_URL:
     logger.critical("Environment variable USERS_DB_URL must be set")
     raise RuntimeError("Environment variable USERS_DB_URL must be set")
+
 AMQP_URL = os.getenv("AMQP_URL")
 if not AMQP_URL:
     logger.critical("Environment variable AMQP_URL must be set")
     raise RuntimeError("Environment variable AMQP_URL must be set")
+
 JWT_SECRET = os.getenv("JWT_SECRET", "secret")
 
-# Initialize DB schema
+# -----------------------------------------------------
+# Initialize database schema
+# -----------------------------------------------------
 Base.metadata.create_all(bind=engine)
 
-# Default ports
-GRPC_PORT = int(os.getenv("PORT", "50051"))
-HEALTH_PORT = int(os.getenv("HEALTH_PORT", str(GRPC_PORT + 1)))
+# -----------------------------------------------------
+# Ports
+# -----------------------------------------------------
+# gRPC is served here; nginx will listen on $PORT and proxy to this.
+GRPC_PORT = int(os.getenv("GRPC_PORT", "50052"))
 
 # -----------------------------------------------------
 # RabbitMQ helper
@@ -64,7 +67,11 @@ def publish_event(event_type: str, payload: dict):
     conn = pika.BlockingConnection(params)
     ch = conn.channel()
     ch.exchange_declare(exchange="users", exchange_type="fanout")
-    ch.basic_publish(exchange="users", routing_key="", body=json.dumps({"type": event_type, **payload}))
+    ch.basic_publish(
+        exchange="users",
+        routing_key="",
+        body=json.dumps({"type": event_type, **payload})
+    )
     conn.close()
 
 # -----------------------------------------------------
@@ -88,8 +95,10 @@ class AuthInterceptor(ServerInterceptor):
         handler = continuation(handler_call_details)
         if not handler:
             return None
+        # Only unary-unary methods
         if handler.request_streaming or handler.response_streaming:
             return handler
+
         method = handler_call_details.method.split("/")[-1]
 
         def wrapper(request, context: ServicerContext):
@@ -100,11 +109,14 @@ class AuthInterceptor(ServerInterceptor):
                 if token_hdr:
                     data = decode_token(token_hdr.split()[1])
                     if request.role == RoleEnum.admin.value and data.get("role") != RoleEnum.admin.value:
-                        context.abort(grpc.StatusCode.PERMISSION_DENIED, "Solo admin puede crear administradores")
+                        context.abort(grpc.StatusCode.PERMISSION_DENIED,
+                                      "Solo admin puede crear administradores")
                 elif request.role == RoleEnum.admin.value:
-                    context.abort(grpc.StatusCode.UNAUTHENTICATED, "Token requerido para crear admin")
+                    context.abort(grpc.StatusCode.UNAUTHENTICATED,
+                                  "Token requerido para crear admin")
                 return handler.unary_unary(request, context)
-            # Other methods
+
+            # All other methods require a valid token
             if not token_hdr:
                 context.abort(grpc.StatusCode.UNAUTHENTICATED, "Token requerido")
             data = decode_token(token_hdr.split()[1])
@@ -118,46 +130,33 @@ class AuthInterceptor(ServerInterceptor):
         )
 
 # -----------------------------------------------------
-# gRPC UserService (omitted methods)...
+# UserService implementation
 # -----------------------------------------------------
 class UserService(users_pb2_grpc.UserServiceServicer):
-    pass  # implement CreateUser, GetUserById, etc.
+    def CreateUser(self, req, ctx):
+        # ... tu lógica de CreateUser tal y como la tenías ...
+        pass
+
+    def GetUserById(self, req, ctx):
+        # ... lógica de GetUserById ...
+        pass
+
+    def UpdateUser(self, req, ctx):
+        # ... lógica de UpdateUser ...
+        pass
+
+    def DeleteUser(self, req, ctx):
+        # ... lógica de DeleteUser ...
+        pass
+
+    def ListUsers(self, req, ctx):
+        # ... lógica de ListUsers ...
+        pass
 
 # -----------------------------------------------------
-# HTTP health-check for Render
-# -----------------------------------------------------
-class HealthHandler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        if self.path in ('/', '/healthz'):
-            self.send_response(200)
-            self.send_header('Content-Type', 'text/plain')
-            self.end_headers()
-            self.wfile.write(b'OK - Render health check')
-        else:
-            self.send_response(404)
-            self.end_headers()
-
-    def do_HEAD(self):
-        if self.path in ('/', '/healthz'):
-            self.send_response(200)
-            self.send_header('Content-Type', 'text/plain')
-            self.end_headers()
-        else:
-            self.send_response(404)
-            self.end_headers()
-
-def start_health_server():
-    logger.info(f"Render health server on /healthz listening at port {HEALTH_PORT}")
-    HTTPServer(('', HEALTH_PORT), HealthHandler).serve_forever()
-
-# -----------------------------------------------------
-# Server bootstrap
+# gRPC server bootstrap
 # -----------------------------------------------------
 def serve():
-    # Start HTTP health-check on separate port
-    threading.Thread(target=start_health_server, daemon=True).start()
-
-    # Start gRPC server
     server = grpc.server(
         futures.ThreadPoolExecutor(max_workers=10),
         interceptors=[AuthInterceptor(logger)],
