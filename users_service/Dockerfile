@@ -15,7 +15,7 @@ COPY . .
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # Exponemos el puerto público que Render checkea
-EXPOSE 50051
+EXPOSE 10000
 
 # Arranca el servidor gRPC en GRPC_PORT=50052 y nginx en foreground
 CMD sh -c "\
