@@ -1,37 +1,23 @@
 {
-    # Deshabilita el admin endpoint
+    # Desactiva la API admin para que no robe tráfico
     admin off
 }
 
-https://users-service-7pvg.onrender.com {
-    # Automático: Caddy obtendrá/renovará certificados aquí
-
-    # 1) Deja que ACME sirva sus propios retos
-    handle_path /.well-known/acme-challenge/* {
-        # Caddy guarda/lee los tokens de ACME automáticamente; no pongas nada más
-        file_server
+:80 {
+    # Health-check en "/" y "/healthz"
+    respond / 200 {
+        body "OK - Render health check"
+        close
+    }
+    respond /healthz 200 {
+        body "OK - Render health check"
+        close
     }
 
-    # 2) Health‐check en “/”
-    handle_path / {
-        respond "OK - Render health check" 200 {
-            close
-        }
-    }
-
-    # 3) Health‐check en “/healthz”
-    handle_path /healthz {
-        respond "OK - Render health check" 200 {
-            close
-        }
-    }
-
-    # 4) Todo lo demás → gRPC backend
-    handle {
-        reverse_proxy * 127.0.0.1:50052 {
-            transport http {
-                versions h2
-            }
+    # Reverse-proxy gRPC (h2c) al backend
+    reverse_proxy * 127.0.0.1:50052 {
+        transport http {
+            versions h2c
         }
     }
 }

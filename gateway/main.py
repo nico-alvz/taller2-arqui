@@ -56,8 +56,7 @@ def jwt_dependency(token: str = Depends(oauth2_scheme)) -> str:
 
 # gRPC stub helpers
 async def get_user_stub():
-    creds = grpc.ssl_channel_credentials()
-    channel = grpc.aio.insecure_channel(settings.users_service_addr, creds)
+    channel = grpc.insecure_channel(settings.USERS_SERVICE_ADDR)
     return users_pb2_grpc.UserServiceStub(channel)
 async def get_playlist_stub():
     channel = grpc.aio.insecure_channel(settings.playlist_service_addr)
