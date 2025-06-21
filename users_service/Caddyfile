@@ -1,20 +1,20 @@
 {
-    # Desactiva la API admin para que no robe tráfico
     admin off
 }
 
 :80 {
-    # Health-check en "/" y "/healthz"
+    protocols h2c h1
+
     respond / 200 {
         body "OK - Render health check"
         close
     }
+
     respond /healthz 200 {
         body "OK - Render health check"
         close
     }
 
-    # Reverse-proxy gRPC (h2c) al backend
     reverse_proxy * 127.0.0.1:50052 {
         transport http {
             versions h2c
