@@ -1,32 +1,23 @@
 {
-    # Disable the admin endpoint so it doesn’t intercept health-checks
+    # Desactiva el API de administración para que no interfiera
     admin off
 }
 
-# Site block for your service domain, with automatic HTTPS (TLS)
 https://users-service-7pvg.onrender.com {
-    # Caddy will automatically obtain and renew certificates for this host
+    # Caddy obtendrá y renovará certificados automáticamente
 
-    # ─── Health-check on "/" ────────────────────────────────────
-    @health {
-        path /
-        methods GET HEAD
-    }
-    respond @health "OK - Render health check" 200 {
+    # ─── Health-check en “/” ─────────────────────────────────
+    respond / "OK - Render health check" 200 {
         close
     }
 
-    # ─── Health-check on "/healthz" ────────────────────────────
-    @healthz {
-        path /healthz
-        methods GET HEAD
-    }
-    respond @healthz "OK - Render health check" 200 {
+    # ─── Health-check en “/healthz” ────────────────────────────
+    respond /healthz "OK - Render health check" 200 {
         close
     }
 
-    # ─── Reverse-proxy everything else to your gRPC backend ──────
-    reverse_proxy /* 127.0.0.1:50052 {
+    # ─── Proxy inverso para todo lo demás hacia tu backend gRPC ─
+    reverse_proxy * 127.0.0.1:50052 {
         transport http {
             versions h2
         }
