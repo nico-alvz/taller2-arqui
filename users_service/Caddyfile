@@ -1,23 +1,34 @@
 {
-  admin off
+    # Disable the admin endpoint so it doesn’t intercept health-checks
+    admin off
 }
 
-# Puerto 80 → HTTP/1.1 + h2c
-:80 {
-  # Health-check
-  respond "/" 200 {
-    body "OK - Render health check"
-    close
-  }
-  respond "/healthz" 200 {
-    body "OK - Render health check"
-    close
-  }
+# Site block for your service domain, with automatic HTTPS (TLS)
+https://users-service-7pvg.onrender.com {
+    # Caddy will automatically obtain and renew certificates for this host
 
-  # Proxy h2c a gRPC backend
-  reverse_proxy * 127.0.0.1:50052 {
-    transport http {
-      versions h2c
+    # ─── Health-check on "/" ────────────────────────────────────
+    @health {
+        path /
+        methods GET HEAD
     }
-  }
+    respond @health "OK - Render health check" 200 {
+        close
+    }
+
+    # ─── Health-check on "/healthz" ────────────────────────────
+    @healthz {
+        path /healthz
+        methods GET HEAD
+    }
+    respond @healthz "OK - Render health check" 200 {
+        close
+    }
+
+    # ─── Reverse-proxy everything else to your gRPC backend ──────
+    reverse_proxy /* 127.0.0.1:50052 {
+        transport http {
+            versions h2
+        }
+    }
 }
