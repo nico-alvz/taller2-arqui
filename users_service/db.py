@@ -14,7 +14,7 @@ if not us_db_url:
 
 # Create the SQLAlchemy engine and session factory
 engine = create_engine(
-    DATABASE_URL,
+    us_db_url,
     poolclass=QueuePool,
     pool_size=3,        # 3 conexiones persistentes
     max_overflow=2,     # +2 conexiones “extra” de forma temporal
