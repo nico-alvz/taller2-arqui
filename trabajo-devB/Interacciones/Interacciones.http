@@ -1,0 +1,6 @@
+@Interacciones_HostAddress = http://localhost:5010
+
+GET {{Interacciones_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,16 @@
+syntax = "proto3";
+package email;
+
+import "google/protobuf/empty.proto";
+
+// Servicio gRPC para envío automático de correos de actualización de factura
+service EmailService {
+  // Envía correo al actualizar una factura
+  rpc SendInvoiceUpdate(InvoiceUpdateRequest) returns (google.protobuf.Empty);
+}
+
+message InvoiceUpdateRequest {
+  string invoice_id = 1;    // ID de la factura
+  string email      = 2;    // Email del destinatario
+  string status     = 3;    // Nuevo estado de la factura
+}

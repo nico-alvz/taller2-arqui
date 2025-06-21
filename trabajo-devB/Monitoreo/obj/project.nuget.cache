@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "7aoY08+QBfA=",
+  "success": true,
+  "projectFilePath": "D:\\s\\primer semestre 2025\\arqu. sis\\Taller2\\Monitoreo\\Monitoreo.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ivans\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.3\\microsoft.aspnetcore.openapi.9.0.3.nupkg.sha512",
+    "C:\\Users\\ivans\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}

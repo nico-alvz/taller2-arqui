@@ -1,16 +1,19 @@
+# db.py
 import os
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import ArgumentError
 
-DATABASE_URL = os.getenv('PLAYLIST_DB_URL', 'postgresql://postgres:example@localhost/streamflow_playlists')
+load_dotenv()
 
-connect_args = {}
-pool_args = {}
-if DATABASE_URL.startswith('sqlite'):
-    from sqlalchemy.pool import StaticPool
-    connect_args = {"check_same_thread": False}
-    pool_args = {"poolclass": StaticPool}
+DATABASE_URL = os.getenv('DATABASE_URL')
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL environment variable is not set!")
 
-engine = create_engine(DATABASE_URL, connect_args=connect_args, **pool_args)
+try:
+    engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+except ArgumentError as e:
+    raise RuntimeError(f"Invalid DATABASE_URL: {e}")
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base = declarative_base()

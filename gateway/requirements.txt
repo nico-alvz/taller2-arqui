@@ -1,4 +1,7 @@
 fastapi
 uvicorn[standard]
-httpx
+requests
 python-jose
+grpcio
+pydantic-settings
+aio

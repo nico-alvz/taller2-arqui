@@ -6,7 +6,8 @@ services:
     environment:
       - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/streamflow_auth
       - JWT_SECRET=${JWT_SECRET}
-      - USERS_DB_URL=${USERS_DB_URL}
+      - AMQP_URL=${AMQP_URL}
+      - AUTH_USERS_DB_URL=${AUTH_USERS_DB_URL}
     depends_on:
       postgres:
         condition: service_healthy
@@ -26,6 +27,7 @@ services:
     build: ./users_service
     environment:
       - USERS_DB_URL=${USERS_DB_URL}
+      - AMQP_URL=${AMQP_URL}
     depends_on:
       mariadb:
         condition: service_healthy

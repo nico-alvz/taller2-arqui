@@ -1,0 +1,6 @@
+@Monitoreo_HostAddress = http://localhost:5064
+
+GET {{Monitoreo_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+option csharp_namespace = "Video";
+
+service VideoService 
+{
+    rpc UploadVideo (UploadVideoRequest) returns (VideoResponse);
+    rpc GetVideobyId (VideoRequest) returns (VideoResponse);
+    rpc UpdateVideo (UpdateVideoRequest) returns (VideoResponse);
+    rpc DeleteVideo (VideoRequest) returns (Empty);
+    rpc List (Empty) returns (VideoListResponse);
+}
+
+message UploadVideoRequest
+{
+    string titulo=1;
+    string descripcion=2;
+    string genero=3;
+}
+
+message VideoRequest
+{
+    int32 id=1;
+}
+
+message UpdateVideoRequest
+{
+    string titulo=1;
+    string descripcion=2;
+    string genero=3;
+}
+
+message VideoResponse
+{
+    int32 id=1;
+    string titulo=2;
+    string descripcion=3;
+    string genero=4;
+    int32 cantlikes=5;
+}
+
+message VideoListResponse
+{
+    repeated VideoResponse records=1;
+}

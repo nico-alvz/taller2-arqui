@@ -1,0 +1,6 @@
+@VideosMS_HostAddress = http://localhost:5296
+
+GET {{VideosMS_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

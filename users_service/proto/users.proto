@@ -1,0 +1,48 @@
+syntax = "proto3";
+package users;
+
+import "google/protobuf/timestamp.proto";
+
+service UserService {
+  rpc CreateUser(CreateUserRequest) returns (UserResponse);
+  rpc GetUserById(GetUserByIdRequest) returns (UserResponse);
+  rpc UpdateUser(UpdateUserRequest) returns (UserResponse);
+  rpc DeleteUser(DeleteUserRequest) returns (Empty);
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+}
+
+message CreateUserRequest {
+  string first_name = 1;
+  string last_name  = 2;
+  string email      = 3;
+  string password   = 4;
+  string password_confirmation = 5;
+  string role       = 6;
+}
+
+message GetUserByIdRequest { string id = 1; }
+message UpdateUserRequest {
+  string id         = 1;
+  string first_name = 2;
+  string last_name  = 3;
+  string email      = 4;
+}
+message DeleteUserRequest { string id = 1; }
+message ListUsersRequest {
+  string email       = 1;  // Búsqueda parcial en email
+  string first_name  = 2;  // Búsqueda parcial en nombre
+  string last_name   = 3;  // Búsqueda parcial en apellido
+}
+
+message User {
+  string id         = 1;
+  string first_name = 2;
+  string last_name  = 3;
+  string email      = 4;
+  string role       = 5;
+  google.protobuf.Timestamp created_at = 6;
+}
+
+message UserResponse { User user = 1; }
+message ListUsersResponse { repeated User users = 1; }
+message Empty {}

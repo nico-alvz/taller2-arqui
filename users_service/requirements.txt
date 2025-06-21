@@ -1,10 +1,27 @@
-fastapi
-uvicorn[standard]
-SQLAlchemy
-alembic
-pymysql
-pika
-pytest
-httpx==0.24.1
-Faker
-passlib[bcrypt]
+# --- core web / gRPC ---
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+grpcio==1.64.0
+grpcio-tools==1.64.0        # 1.64 se compila contra protobuf 5
+protobuf==5.27.0
+
+# --- mensajería ---
+pika==1.3.2
+
+# --- persistencia ---
+sqlalchemy==2.0.29
+pymysql==1.1.1
+alembic==1.13.1
+psycopg2-binary==2.9.9
+
+# --- utilidades ---
+python-dotenv==1.0.1
+faker==24.11.0
+httpx==0.27.0
+
+# --- seguridad ---
+passlib[bcrypt]==1.7.4
+bcrypt==4.1.3
+
+# --- jwt ---
+PyJWT==2.10.1

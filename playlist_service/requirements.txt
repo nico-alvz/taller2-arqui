@@ -1,7 +1,10 @@
-fastapi
-uvicorn[standard]
-SQLAlchemy
-psycopg2-binary
+grpcio
+grpcio-tools
+protobuf
+sqlalchemy
 alembic
-pytest
-httpx
+python-dotenv
+pika
+passlib[bcrypt]
+PyJWT
+psycopg2-binary

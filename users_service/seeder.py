@@ -1,58 +1,41 @@
-from faker import Faker
-from sqlalchemy.orm import Session
-from passlib.hash import bcrypt
 import os
 import json
+import uuid
+from faker import Faker
+from db import SessionLocal
+from models import Base, User, RoleEnum
 import pika
 
-from .db import SessionLocal, Base, engine
-from . import models
+dotenv_path = os.getenv("ENV_PATH", ".env")
+# carga .env si usas
+
+Base.metadata.create_all(bind=None)
 
 fake = Faker()
+db = SessionLocal()
 
-Base.metadata.create_all(bind=engine)
+# Crear admin fijo
+admin = User(
+    first_name="Admin", last_name="User", email="admin@example.com",
+    password_hash=fake.password(), role=RoleEnum.admin)
+db.add(admin)
 
-AMQP_URL = os.getenv("AMQP_URL")
+events = []
+for _ in range(150):
+    u = User(
+        first_name=fake.first_name(), last_name=fake.last_name(),
+        email=fake.unique.email(),
+        password_hash=fake.password(), role=RoleEnum.client)
+    db.add(u)
+    events.append({"id": str(u.id), "email": u.email,
+                   "first_name": u.first_name, "last_name": u.last_name})
 
-def publish_created(user):
-    if not AMQP_URL:
-        return
-    params = pika.URLParameters(AMQP_URL)
-    conn = pika.BlockingConnection(params)
-    ch = conn.channel()
-    ch.exchange_declare(exchange="users", exchange_type="fanout")
-    ch.basic_publish(
-        exchange="users",
-        routing_key="",
-        body=json.dumps({"id": user.id, "email": user.email, "full_name": user.full_name}),
-    )
-    conn.close()
-
-
-def seed(n: int = 150):
-    db: Session = SessionLocal()
-    users = []
-    try:
-        for _ in range(n):
-            u = models.User(
-                email=fake.unique.email(),
-                password_hash=bcrypt.hash("password"),
-                full_name=fake.name(),
-            )
-            db.add(u)
-            users.append(u)
-        db.commit()
-        for u in users:
-            db.refresh(u)
-            publish_created(u)
-        return users
-    finally:
-        db.close()
-
-if __name__ == "__main__":
-    import sys
-    n = int(sys.argv[1]) if len(sys.argv) > 1 else 150
-    created = seed(n)
-    created = seed()
-    for u in created:
-        print({"id": u.id, "email": u.email, "full_name": u.full_name})
+db.commit()
+# Publicar eventos
+params = pika.URLParameters(os.getenv("AMQP_URL"))
+conn = pika.BlockingConnection(params)
+ch = conn.channel()
+ch.exchange_declare(exchange="users", exchange_type="fanout")
+for ev in events:
+    ch.basic_publish(exchange="users", routing_key="", body=json.dumps({"type":"created", **ev}))
+conn.close()
