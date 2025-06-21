@@ -1,24 +1,23 @@
 {
-    # 1) Desactiva el API de admin para que no robe tus peticiones HTTP/1.1
-    admin off
+  admin off
 }
 
-# 2) Bloque de sitio "catch-all" en el puerto 10000
-:10000 {
-    # Health-check en "/" y "/healthz"
-    respond "/" 200 {
-        body "OK - Render health check"
-        close
-    }
-    respond "/healthz" 200 {
-        body "OK - Render health check"
-        close
-    }
+# Puerto 80 → HTTP/1.1 + h2c
+:80 {
+  # Health-check
+  respond "/" 200 {
+    body "OK - Render health check"
+    close
+  }
+  respond "/healthz" 200 {
+    body "OK - Render health check"
+    close
+  }
 
-    # Proxy gRPC (h2c) al backend Python en 127.0.0.1:50052
-    reverse_proxy * 127.0.0.1:50052 {
-        transport http {
-            versions h2c
-        }
+  # Proxy h2c a gRPC backend
+  reverse_proxy * 127.0.0.1:50052 {
+    transport http {
+      versions h2c
     }
+  }
 }

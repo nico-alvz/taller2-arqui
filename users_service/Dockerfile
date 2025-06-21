@@ -12,7 +12,7 @@ COPY . .
 COPY Caddyfile /etc/caddy/Caddyfile
 
 # Primero expone el proxy (que sirve health y gRPC)
-EXPOSE 10000
+EXPOSE 80
 
 CMD sh -c "\
     export GRPC_PORT=50052 && \
